@@ -109,7 +109,7 @@ peg.prototype.parse = { str, start_rule = null, fully = false |
     { result.matched_all? = s.pos == str.length }
 
   true? { result && { fully } }
-    { true? result.matched_all?, { result }, {p "Failed at #{s.pos}";false}  }
+    { true? result.matched_all?, { result }, { p "Failed at #{s.pos}"; false }  }
     { result }
 }
 

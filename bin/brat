@@ -48,7 +48,7 @@ local interactive = function ()
   int linenoiseHistoryAdd(const char *line);
   char *linenoise(const char *prompt);
   ]]
-  
+
   local ln = ffi.load("linenoise")
 
   local get_line = ln.linenoise;
@@ -107,7 +107,11 @@ local interactive = function ()
 
       lua_code = compiler:run(base_string:new(input))._lua_string
 
-      parsed_function = assert(loadstring(lua_code, "interactive"))
+      if lua_code ~= nil then
+        parsed_function = assert(loadstring(lua_code, "interactive"))
+      else
+        parsed_function = function () print("Invalid syntax: " .. input) end
+      end
 
       setfenv(parsed_function, interactive_env)
 
@@ -125,7 +129,11 @@ end
 run_string = function (string)
   local parsed = brat2lua:compile_understring(base_string:new(string))._lua_string
 
-  parsed_function = assert(loadstring(parsed, "string"))
+  if lua_code ~= nil then
+    parsed_function = assert(loadstring(lua_code, "string"))
+  else
+    parsed_function = function () print("Invalid syntax: " .. input) end
+  end
 
   local rescue = function (obj, err)
     return err
